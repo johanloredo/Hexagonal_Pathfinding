@@ -31,7 +31,7 @@ public class HexGrid<TGridObject>
             }
         }
 
-        bool showDebug = false;
+        bool showDebug = false; // This is not executing ATM !!!!!!!!!!!!!!!!!!
         if (showDebug)
         {
             TextMesh[,] debugTextArray = new TextMesh[width, height];
@@ -40,9 +40,9 @@ public class HexGrid<TGridObject>
             {
                 for (int z = 0; z < gridArray.GetLength(1); z++)
                 {
-                    //debugTextArray[x, z] = UtilsClass.CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 40, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
-                    //debugTextArray[x, z].transform.localScale = Vector3.one * .13f;
-                    //debugTextArray[x, z].transform.eulerAngles = new Vector3(90, 0, 0);
+                    debugTextArray[x, z] = UtilsClass.SpawnText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 40, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+                    debugTextArray[x, z].transform.localScale = Vector3.one * .13f;
+                    debugTextArray[x, z].transform.eulerAngles = new Vector3(90, 0, 0);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.white, 100f);
                 }
