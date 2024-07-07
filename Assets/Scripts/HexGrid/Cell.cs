@@ -53,7 +53,6 @@ public class Cell : MonoBehaviour, ICell
     public bool IsWalkable
     {
         get { return isWalkable; }
-        //set { isWalkable = value; }
     }
 
     public void SetWalkable(bool walkable)

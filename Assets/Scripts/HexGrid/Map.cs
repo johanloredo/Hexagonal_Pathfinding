@@ -70,8 +70,7 @@ public class Map : MonoBehaviour, IMap
         ICell newCell = Instantiate(cellPrefab, GetWorldPosition(x, z), Quaternion.identity);
         newCell.IndexX = x;
         newCell.IndexY = z;
-        //newCell.IsWalkable = true;
-        //newCell.SetWalkable(true);
+
         newCell.SetWalkable(Random.Range(1, 100) % 9 != 0);
         newCell.HighLight(false);
         return newCell;

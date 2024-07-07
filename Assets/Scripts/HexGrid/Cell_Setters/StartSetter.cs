@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class StartSetter : MonoBehaviour, ISetCell
 {
-    //private void Start()
-    //{
-    //    LevelController.Instance.OnSettingCell += LevelController_OnSettingCell;
-    //}
     private void OnEnable()
     {
         LevelController.Instance.OnSettingCell += LevelController_OnSettingCell;

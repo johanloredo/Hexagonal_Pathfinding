@@ -4,17 +4,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UIController : Singleton<UIController>
 {
     [Header("Debuggers")]
-    //[SerializeField]
-    //private TMP_Text startCellText;
-    //[SerializeField]
-    //private TMP_Text endCellText;
-
-    //[SerializeField]
-    //private TMP_Text pathLengthText;
     [SerializeField]
     private GameObject startCellDebugger;
     [SerializeField]
@@ -35,6 +29,9 @@ public class UIController : Singleton<UIController>
     [SerializeField]
     private Button getPathButton;
 
+    [Space, SerializeField]
+    private Button resetButton;
+
     [Space, Header("Cell Setters")]
     [SerializeField]
     private GameObject startSetter;
@@ -43,7 +40,7 @@ public class UIController : Singleton<UIController>
     [SerializeField]
     private GameObject obstacleSetter;
 
-    private void Start()
+    private void Awake()
     {
         setStartButton.onClick.AddListener(() => SetStart());
         setEndButton.onClick.AddListener(() => SetEnd());
@@ -51,6 +48,7 @@ public class UIController : Singleton<UIController>
 
         getPathButton.onClick.AddListener(() => GetPath());
 
+        resetButton.onClick.AddListener(() => ResetGame());
 
         LevelController.Instance.OnSettingCell += LevelController_OnSettingCell;
 
@@ -63,7 +61,7 @@ public class UIController : Singleton<UIController>
     {
         if (currentDebugger != null)
         {
-            currentDebugger.text = e.TogglingCell.Position + "\nx: " + e.TogglingCell.IndexX + ", y: " + e.TogglingCell.IndexY;
+            currentDebugger.text = "(" + e.TogglingCell.IndexX + ", " + e.TogglingCell.IndexY + ")";
         }
     }
 
@@ -94,18 +92,26 @@ public class UIController : Singleton<UIController>
 
     public void GetPath()
     {
-        float pathLength = LevelController.Instance.GetPath().Count;
-        //pathLengthText.text = pathLength.ToString();
+        float pathLength;
+        try
+        {
+            pathLength = LevelController.Instance.GetPath().Count;
+        }
+        catch
+        {
+            return;
+        }
 
-        //if (!pathLengthText.gameObject.activeSelf)
-        //{
-        //    pathLengthText.gameObject.SetActive(true);
-        //}
         pathLengthDebugger.transform.GetChild(1).GetComponent<TMP_Text>().text = pathLength.ToString();
 
         if (!pathLengthDebugger.activeSelf)
         {
             pathLengthDebugger.SetActive(true);
         }
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

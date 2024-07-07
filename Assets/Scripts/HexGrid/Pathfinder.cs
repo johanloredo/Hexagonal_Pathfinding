@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinder : MonoBehaviour, IPathFinder
+public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 {
     private const int MOVE_STRAIGHT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
@@ -29,7 +29,7 @@ public class Pathfinder : MonoBehaviour, IPathFinder
         {
             for (int y = 0; y < map.Height; y++)
             {
-                ICell cell = map.StoredMap[x, y]; //mapGridArray[x, y];
+                ICell cell = map.StoredMap[x, y];
 
                 cell.GCost = 99999999;
                 cell.CalculateFCost();
@@ -177,17 +177,25 @@ public class Pathfinder : MonoBehaviour, IPathFinder
 
     private void HighlightPath(List<ICell> path)
     {
+        foreach (ICell cell in path)
+        {
+            cell.HighLight(true);
+            highlightedPath.Add(cell);
+        }
+    }
+
+    public void UnhighlightPath()
+    {
         foreach (ICell cell in highlightedPath)
         {
             cell.HighLight(false);
         }
 
         highlightedPath.Clear();
+    }
 
-        foreach (ICell cell in path)
-        {
-            cell.HighLight(true);
-            highlightedPath.Add(cell);
-        }
+    public bool IsHighlighted()
+    {
+        return highlightedPath.Count > 0;
     }
 }

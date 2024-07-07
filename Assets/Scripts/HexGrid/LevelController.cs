@@ -38,12 +38,13 @@ public class LevelController : Singleton<LevelController>
     {
         map.CreateMap();
 
-        cellStart = cellEnd = map.GetCell(0, 0);
+        cellStart = map.GetCell(0, 0);
+        cellEnd = map.GetCell(map.Width - 1, map.Height - 1);
         //cellStart.HighLight(true);
         UIController.Instance.SetEnd();
-        OnSettingCell?.Invoke(this, new SetCellArgs(cellStart));
-        UIController.Instance.SetStart();
         OnSettingCell?.Invoke(this, new SetCellArgs(cellEnd));
+        UIController.Instance.SetStart();
+        OnSettingCell?.Invoke(this, new SetCellArgs(cellStart));
 
 
         //GetPath(map.GetCell(0, 0), map.GetCell(map.Width - 1, map.Height - 1));
@@ -85,13 +86,26 @@ public class LevelController : Singleton<LevelController>
 
     public IList<ICell> GetPath()
     {
-        path = pathFinder.FindPathOnMap(cellStart, cellEnd, map);
-        return path;
+        if (cellStart.IsWalkable && cellEnd.IsWalkable)
+        {
+            path = pathFinder.FindPathOnMap(cellStart, cellEnd, map);
+            return path;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     #region Public Methods
     public void SetCellStart(ICell cell)
     {
+        if (Pathfinder.Instance.IsHighlighted())
+        {
+            Pathfinder.Instance.UnhighlightPath();
+            cellEnd.HighLight(true);
+        }
+
         cellStart.HighLight(false);
         cellStart = cell;
         cellStart.HighLight(true);
@@ -99,6 +113,12 @@ public class LevelController : Singleton<LevelController>
 
     public void SetCellEnd(ICell cell)
     {
+        if (Pathfinder.Instance.IsHighlighted())
+        {
+            Pathfinder.Instance.UnhighlightPath();
+            cellStart.HighLight(true);
+        }
+
         cellEnd.HighLight(false);
         cellEnd = cell;
         cellEnd.HighLight(true);
@@ -106,6 +126,13 @@ public class LevelController : Singleton<LevelController>
 
     public void SetObstacle(ICell cell)
     {
+        if (Pathfinder.Instance.IsHighlighted())
+        {
+            Pathfinder.Instance.UnhighlightPath();
+            cellStart.HighLight(true);
+            cellEnd.HighLight(true);
+        }
+
         cell.SetWalkable(!cell.IsWalkable);
     }
     #endregion
