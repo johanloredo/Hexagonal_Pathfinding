@@ -39,6 +39,12 @@ public class LevelController : Singleton<LevelController>
         map.CreateMap();
 
         cellStart = cellEnd = map.GetCell(0, 0);
+        //cellStart.HighLight(true);
+        UIController.Instance.SetEnd();
+        OnSettingCell?.Invoke(this, new SetCellArgs(cellStart));
+        UIController.Instance.SetStart();
+        OnSettingCell?.Invoke(this, new SetCellArgs(cellEnd));
+
 
         //GetPath(map.GetCell(0, 0), map.GetCell(map.Width - 1, map.Height - 1));
     }
@@ -77,23 +83,25 @@ public class LevelController : Singleton<LevelController>
         }
     }
 
-    private void GetPath(ICell newCellStart, ICell newCellEnd)
+    public IList<ICell> GetPath()
     {
-        cellStart = newCellStart;
-        cellEnd = newCellEnd;
-
         path = pathFinder.FindPathOnMap(cellStart, cellEnd, map);
+        return path;
     }
 
     #region Public Methods
     public void SetCellStart(ICell cell)
     {
+        cellStart.HighLight(false);
         cellStart = cell;
+        cellStart.HighLight(true);
     }
 
     public void SetCellEnd(ICell cell)
     {
+        cellEnd.HighLight(false);
         cellEnd = cell;
+        cellEnd.HighLight(true);
     }
 
     public void SetObstacle(ICell cell)
