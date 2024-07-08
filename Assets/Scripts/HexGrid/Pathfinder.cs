@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 {
-    [SerializeField]
     private Map map;
 
     private List<ICell> openList;
     private List<ICell> closedList;
     private List<ICell> highlightedPath = new List<ICell>();
 
+    private Coroutine highlightingRoutine;
+
+    private void Start()
+    {
+        map = Map.Instance;
+    }
+
     #region Interface
     public IList<ICell> FindPathOnMap(ICell cellStart, ICell cellEnd, IMap map)
     {
+        UnhighlightPath();
+
         openList = new List<ICell> { cellStart };
         closedList = new List<ICell>();
 
@@ -39,7 +47,7 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 
             if (currentCell == cellEnd)
             {
-                // Success!
+                // Path completed
                 return CalculatePath(cellEnd);
             }
 
@@ -65,10 +73,7 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
                     neighbourCell.HCost = CalculateDistanceCost(neighbourCell, cellEnd);
                     neighbourCell.CalculateFCost();
 
-                    if (!openList.Contains(neighbourCell))
-                    {
-                        openList.Add(neighbourCell);
-                    }
+                    if (!openList.Contains(neighbourCell)) openList.Add(neighbourCell);
                 }
             }
         }
@@ -92,10 +97,7 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 
         for (int i = 1; i < cellPathList.Count; i++)
         {
-            if (cellPathList[i].FCost < lowestFCostNode.FCost)
-            {
-                lowestFCostNode = cellPathList[i];
-            }
+            if (cellPathList[i].FCost < lowestFCostNode.FCost) lowestFCostNode = cellPathList[i];
         }
 
         return lowestFCostNode;
@@ -107,22 +109,15 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 
         bool oddRow = currentCell.IndexY % 2 == 1;
 
-        if (currentCell.IndexX - 1 >= 0)
-        {
+        if (currentCell.IndexX - 1 >= 0) 
             neighbourList.Add(GetCell(currentCell.IndexX - 1, currentCell.IndexY));
-        }
         if (currentCell.IndexX + 1 < map.Width)
-        {
             neighbourList.Add(GetCell(currentCell.IndexX + 1, currentCell.IndexY));
-        }
+
         if (currentCell.IndexY - 1 >= 0)
-        {
             neighbourList.Add(GetCell(currentCell.IndexX, currentCell.IndexY - 1));
-        }
         if (currentCell.IndexY + 1 < map.Height)
-        {
             neighbourList.Add(GetCell(currentCell.IndexX, currentCell.IndexY + 1));
-        }
 
         if (oddRow)
         {
@@ -161,7 +156,8 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 
         path.Reverse();
 
-        StartCoroutine(DelayHighlight(path));
+        AbortHighlight();
+        highlightingRoutine = StartCoroutine(DelayHighlight(path));
         return path;
     }
 
@@ -172,8 +168,13 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
             cell.Highlight(true);
             highlightedPath.Add(cell);
 
-            yield return new WaitForSeconds(0.025f);
+            yield return new WaitForSeconds(0.075f);
         }
+    }
+
+    public void AbortHighlight()
+    {
+        if (highlightingRoutine != null) StopCoroutine(highlightingRoutine);
     }
 
     public void UnhighlightPath()

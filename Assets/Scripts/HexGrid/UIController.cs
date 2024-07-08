@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class UIController : Singleton<UIController>
 {
@@ -13,6 +14,9 @@ public class UIController : Singleton<UIController>
 
     [SerializeField]
     private GameObject pathLengthDebugger;
+
+    [SerializeField]
+    private GameObject noPathDebugger;
 
     private TMP_Text currentDebugger;
 
@@ -52,14 +56,22 @@ public class UIController : Singleton<UIController>
 
         SetStart();
         pathLengthDebugger.SetActive(false);
+        noPathDebugger.SetActive(false);
     }
 
     private void LevelController_OnSettingCell(object sender, LevelController.SetCellArgs e)
     {
-        if (currentDebugger != null)
-        {
-            currentDebugger.text = "(" + e.TogglingCell.IndexX + ", " + e.TogglingCell.IndexY + ")";
-        }
+        if (currentDebugger != null) currentDebugger.text = e.TogglingCell.IndexX + ", " + e.TogglingCell.IndexY;
+    }
+
+    private IEnumerator DisplayNoPathError()
+    {
+        noPathDebugger.SetActive(true);
+        SFXController.Instance.PlayNoPath();
+
+        yield return new WaitForSeconds(2.5f);
+
+        noPathDebugger.SetActive(false);
     }
 
     private void SetSetters(bool start, bool end, bool obstacle)
@@ -96,15 +108,13 @@ public class UIController : Singleton<UIController>
         }
         catch
         {
+            StartCoroutine(DisplayNoPathError());
             return;
         }
 
         pathLengthDebugger.transform.GetChild(1).GetComponent<TMP_Text>().text = pathLength.ToString();
 
-        if (!pathLengthDebugger.activeSelf)
-        {
-            pathLengthDebugger.SetActive(true);
-        }
+        if (!pathLengthDebugger.activeSelf) pathLengthDebugger.SetActive(true);
     }
 
     public void ResetGame()

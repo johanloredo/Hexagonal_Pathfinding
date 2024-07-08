@@ -61,9 +61,6 @@ public class Map : Singleton<Map>, IMap
             }
         }
 
-        storedMap[0, 0].SetWalkable(true);
-        storedMap[width - 1, height - 1].SetWalkable(true);
-
         return storedMap;
     }
 
@@ -73,21 +70,15 @@ public class Map : Singleton<Map>, IMap
         newCell.IndexX = x;
         newCell.IndexY = z;
 
-        newCell.SetWalkable(Random.Range(1, 100) % 9 != 0);
+        newCell.SetWalkable(Random.Range(1, 10) % 3 != 0);
         newCell.Highlight(false);
         return newCell;
     }
 
     public ICell GetCell(int x, int z)
     {
-        if (x >= 0 && z >= 0 && x < width && z < height)
-        {
-            return storedMap[x, z];
-        }
-        else
-        {
-            return null;
-        }
+        if (x >= 0 && z >= 0 && x < width && z < height) return storedMap[x, z];
+        else return null;
     }
 
     public Vector3 GetWorldPosition(int x, int z)

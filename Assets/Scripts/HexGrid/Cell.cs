@@ -13,9 +13,6 @@ public class Cell : MonoBehaviour, ICell
     private bool isWalkable;
     private ICell cameFromNode;
 
-    [SerializeField]
-    private Transform obstaclePrefab;
-
     #region Interface
     public int IndexX
     {
@@ -71,10 +68,15 @@ public class Cell : MonoBehaviour, ICell
         fCost = gCost + hCost;
     }
 
-    public void Highlight(bool turnOn/*, Color color*/)
+    public void Highlight(bool turnOn)
     {
         transform.GetChild(0).gameObject.SetActive(!turnOn);
         transform.GetChild(1).gameObject.SetActive(turnOn);
+
+        if (turnOn)
+        {
+            SFXController.Instance.PlayHexSpawn();
+        }
     }
 
     public void SetHighlightColor(Color color)
