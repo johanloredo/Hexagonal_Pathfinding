@@ -1,23 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Pathfinder : Singleton<Pathfinder>, IPathFinder
 {
-    private const int MOVE_STRAIGHT_COST = 10;
-    private const int MOVE_DIAGONAL_COST = 14;
-
     [SerializeField]
     private Map map;
 
     private List<ICell> openList;
     private List<ICell> closedList;
     private List<ICell> highlightedPath = new List<ICell>();
-
-    //private void Awake()
-    //{
-    //    map.CreateMap();
-    //}
 
     #region Interface
     public IList<ICell> FindPathOnMap(ICell cellStart, ICell cellEnd, IMap map)
@@ -91,7 +83,7 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
         int yDistance = Mathf.Abs(a.IndexY - b.IndexY);
         int remaining = Mathf.Abs(xDistance - yDistance);
 
-        return MOVE_STRAIGHT_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
+        return Mathf.Min(xDistance, yDistance) + remaining;
     }
 
     private ICell GetLowestFCostCell(List<ICell> cellPathList)
@@ -164,23 +156,23 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
         while (currentCell.CameFromCell != null)
         {
             path.Add(currentCell.CameFromCell);
-            //currentCell.HighLight(true);
             currentCell = currentCell.CameFromCell;
         }
 
-        print("Path calculated");
-
         path.Reverse();
-        HighlightPath(path);
+
+        StartCoroutine(DelayHighlight(path));
         return path;
     }
 
-    private void HighlightPath(List<ICell> path)
+    private IEnumerator DelayHighlight(List<ICell> path)
     {
         foreach (ICell cell in path)
         {
-            cell.HighLight(true);
+            cell.Highlight(true);
             highlightedPath.Add(cell);
+
+            yield return new WaitForSeconds(0.025f);
         }
     }
 
@@ -188,7 +180,7 @@ public class Pathfinder : Singleton<Pathfinder>, IPathFinder
     {
         foreach (ICell cell in highlightedPath)
         {
-            cell.HighLight(false);
+            cell.Highlight(false);
         }
 
         highlightedPath.Clear();

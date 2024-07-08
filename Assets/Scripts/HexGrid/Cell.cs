@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Cell : MonoBehaviour, ICell
 {
@@ -72,9 +71,15 @@ public class Cell : MonoBehaviour, ICell
         fCost = gCost + hCost;
     }
 
-    public void HighLight(bool turnOn)
+    public void Highlight(bool turnOn/*, Color color*/)
     {
+        transform.GetChild(0).gameObject.SetActive(!turnOn);
         transform.GetChild(1).gameObject.SetActive(turnOn);
+    }
+
+    public void SetHighlightColor(Color color)
+    {
+        transform.GetChild(1).GetComponent<Image>().color = color;
     }
     #endregion
 }

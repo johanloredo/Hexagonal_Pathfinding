@@ -25,6 +25,11 @@ public class LevelController : Singleton<LevelController>
     private Map map;
 
     [SerializeField]
+    private Transform startHighlighter;
+    [SerializeField]
+    private Transform endHighlighter;
+
+    [SerializeField]
     private LayerMask mouseInputLayerMask;
 
 
@@ -40,26 +45,15 @@ public class LevelController : Singleton<LevelController>
 
         cellStart = map.GetCell(0, 0);
         cellEnd = map.GetCell(map.Width - 1, map.Height - 1);
-        //cellStart.HighLight(true);
+
         UIController.Instance.SetEnd();
         OnSettingCell?.Invoke(this, new SetCellArgs(cellEnd));
         UIController.Instance.SetStart();
         OnSettingCell?.Invoke(this, new SetCellArgs(cellStart));
-
-
-        //GetPath(map.GetCell(0, 0), map.GetCell(map.Width - 1, map.Height - 1));
     }
 
     private void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    map.GetGridPosition(GetMouseWorldPosition(), out int x, out int y);
-        //    ICell targetCell = map.GetCell(x, y);
-
-        //    if (targetCell != null)
-        //        GetPath(cellEnd, targetCell);
-        //}
         if (Input.GetMouseButtonDown(0))
         {
             map.GetGridPosition(GetMouseWorldPosition(), out int x, out int y);
@@ -103,12 +97,14 @@ public class LevelController : Singleton<LevelController>
         if (Pathfinder.Instance.IsHighlighted())
         {
             Pathfinder.Instance.UnhighlightPath();
-            cellEnd.HighLight(true);
+            //cellEnd.Highlight(true);
         }
 
-        cellStart.HighLight(false);
+        //cellStart.Highlight(false);
+
         cellStart = cell;
-        cellStart.HighLight(true);
+        startHighlighter.position = cellStart.Position;
+        //cellStart.Highlight(true);
     }
 
     public void SetCellEnd(ICell cell)
@@ -116,12 +112,14 @@ public class LevelController : Singleton<LevelController>
         if (Pathfinder.Instance.IsHighlighted())
         {
             Pathfinder.Instance.UnhighlightPath();
-            cellStart.HighLight(true);
+            //cellStart.Highlight(true);
         }
 
-        cellEnd.HighLight(false);
+        //cellEnd.Highlight(false);
+
         cellEnd = cell;
-        cellEnd.HighLight(true);
+        endHighlighter.position = cellEnd.Position;
+        //cellEnd.Highlight(true);
     }
 
     public void SetObstacle(ICell cell)
@@ -129,8 +127,8 @@ public class LevelController : Singleton<LevelController>
         if (Pathfinder.Instance.IsHighlighted())
         {
             Pathfinder.Instance.UnhighlightPath();
-            cellStart.HighLight(true);
-            cellEnd.HighLight(true);
+            cellStart.Highlight(true);
+            cellEnd.Highlight(true);
         }
 
         cell.SetWalkable(!cell.IsWalkable);

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,7 +71,7 @@ public class Map : MonoBehaviour, IMap
         newCell.IndexY = z;
 
         newCell.SetWalkable(Random.Range(1, 100) % 9 != 0);
-        newCell.HighLight(false);
+        newCell.Highlight(false);
         return newCell;
     }
 

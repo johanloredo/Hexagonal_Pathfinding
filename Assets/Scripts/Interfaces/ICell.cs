@@ -11,7 +11,7 @@ public interface ICell
 
     Vector3 Position { get; }
 
-    bool IsWalkable { get;/* set;*/ }
+    bool IsWalkable { get; }
 
     void SetWalkable(bool walkable);
 
@@ -19,5 +19,5 @@ public interface ICell
 
     void CalculateFCost();
 
-    void HighLight(bool turnOn);
+    void Highlight(bool turnOn);
 }
