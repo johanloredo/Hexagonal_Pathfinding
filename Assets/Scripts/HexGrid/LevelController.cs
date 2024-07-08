@@ -54,7 +54,8 @@ public class LevelController : Singleton<LevelController>
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))// || Input.GetMouseButtonUp(0))
+        //if (Input.GetMouseButton(0))
         {
             map.GetGridPosition(GetMouseWorldPosition(), out int x, out int y);
             ICell targetCell = map.GetCell(x, y);
@@ -127,8 +128,6 @@ public class LevelController : Singleton<LevelController>
         if (Pathfinder.Instance.IsHighlighted())
         {
             Pathfinder.Instance.UnhighlightPath();
-            cellStart.Highlight(true);
-            cellEnd.Highlight(true);
         }
 
         cell.SetWalkable(!cell.IsWalkable);

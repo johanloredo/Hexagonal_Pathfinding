@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Map : MonoBehaviour, IMap
+public class Map : Singleton<Map>, IMap
 {
     private const float HEX_VERTICAL_OFFSET = 0.75f;
 
@@ -60,6 +60,9 @@ public class Map : MonoBehaviour, IMap
                 storedMap[x, z] = CreateCell(x, z);
             }
         }
+
+        storedMap[0, 0].SetWalkable(true);
+        storedMap[width - 1, height - 1].SetWalkable(true);
 
         return storedMap;
     }
