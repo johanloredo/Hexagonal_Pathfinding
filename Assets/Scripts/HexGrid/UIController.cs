@@ -30,6 +30,10 @@ public class UIController : Singleton<UIController>
     [SerializeField]
     private Button getPathButton;
 
+    private Color red = new Color(0.9f, 0.5f, 0.4f);
+    private Color yellow = new Color(0.95f, 0.8f, 0.5f);
+    private Color blue = new Color(0.18f, 0.22f, 0.32f);
+
     [Space, SerializeField]
     private Button resetButton;
 
@@ -44,19 +48,26 @@ public class UIController : Singleton<UIController>
     private void Awake()
     {
         setStartButton.onClick.AddListener(() => SetStart());
+        //setStartButton.image.color = red;
         setEndButton.onClick.AddListener(() => SetEnd());
+        //setEndButton.image.color = red;
         setObstaclesButton.onClick.AddListener(() => SetObstacle());
+        //setObstaclesButton.image.color = red;
 
         getPathButton.onClick.AddListener(() => GetPath());
+        getPathButton.GetComponent<Image>().color = yellow;
 
         resetButton.onClick.AddListener(() => ResetGame());
+        resetButton.image.color = red;
 
         LevelController.Instance.OnSettingCell += LevelController_OnSettingCell;
 
 
         SetStart();
-        pathLengthDebugger.SetActive(false);
         noPathDebugger.SetActive(false);
+
+        pathLengthDebugger.GetComponent<Image>().color = yellow;
+        pathLengthDebugger.SetActive(false);
     }
 
     private void LevelController_OnSettingCell(object sender, LevelController.SetCellArgs e)
@@ -79,6 +90,10 @@ public class UIController : Singleton<UIController>
         startSetter.SetActive(start);
         endSetter.SetActive(end);
         obstacleSetter.SetActive(obstacle);
+
+        setStartButton.image.color = start ? blue : red;
+        setEndButton.image.color = end ? blue : red;
+        setObstaclesButton.image.color = obstacle ? blue : red;
     }
 
     public void SetStart()
