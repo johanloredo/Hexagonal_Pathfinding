@@ -48,11 +48,8 @@ public class UIController : Singleton<UIController>
     private void Awake()
     {
         setStartButton.onClick.AddListener(() => SetStart());
-        //setStartButton.image.color = red;
         setEndButton.onClick.AddListener(() => SetEnd());
-        //setEndButton.image.color = red;
         setObstaclesButton.onClick.AddListener(() => SetObstacle());
-        //setObstaclesButton.image.color = red;
 
         getPathButton.onClick.AddListener(() => GetPath());
         getPathButton.GetComponent<Image>().color = yellow;

@@ -13,9 +13,6 @@ public class Cell : MonoBehaviour, ICell
     private bool isWalkable;
     private ICell cameFromNode;
 
-    private Color standby = new Color(0.33f, 0.43f, 0.9f);
-    private Color highlighted = new Color(0.96f, 0.84f, 0.58f);
-
     #region Interface
     public int IndexX
     {
@@ -81,16 +78,5 @@ public class Cell : MonoBehaviour, ICell
             SFXController.Instance.PlayHexSpawn();
         }
     }
-
-    //public void SetHighlightColor(Color color)
-    //{
-    //    transform.GetChild(1).GetComponent<Image>().color = color;
-    //}
     #endregion
-
-    //private void Start()
-    //{
-    //    transform.GetChild(0).GetComponent<Renderer>().material.color = standby;
-    //    transform.GetChild(1).GetComponent<Renderer>().material.color = highlighted;
-    //}
 }
